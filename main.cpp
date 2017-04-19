@@ -5,9 +5,10 @@
 int main(int argc, char* argv[]) {
 
 	GameBoard board = GameBoard();
+	//board.in_order();
+	board.test_case();
 	board.print();
-	if (board.is_complete())
-		std::cout << "DONE!" << std::endl;
+
 
 	return 0;
 }

@@ -7,21 +7,25 @@ class GameBoard {
 
 public:
 	GameBoard();
-	GameBoard(int dimension);
 	~GameBoard();
 
+	int manhattan_heuristic();
+	int misplaced_heuristic();
+
+	bool is_solvable();
 	bool is_complete();
+	void in_order();
 	void print();
 
+	void test_case();
 
+	
 private:
-	void initialize(int dimension);
-	bool is_square(int n);
 	
 
+
 private:
-	// this doesn't have to be 2D array
-	std::vector<std::vector<int> > board_;
+	int* board_;
 
 
 };
