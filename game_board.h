@@ -19,6 +19,10 @@ public:
 
 	void test_case();
 
+	int permutations();
+	int hash_key(int* board);
+	bool explored(int key);
+
 	
 private:
 	
@@ -26,6 +30,7 @@ private:
 
 private:
 	int* board_;
+	bool* explored_;
 
 
 };
