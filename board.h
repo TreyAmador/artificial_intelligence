@@ -1,0 +1,42 @@
+#ifndef GAME_BOARD_H_
+#define GAME_BOARD_H_
+#include <vector>
+#include <queue>
+
+
+class Board {
+
+public:
+	Board();
+	~Board();
+
+	// to be stored in new nodes
+	int* store_config();
+	int* configuration();
+
+	int manhattan_heuristic();
+	int misplaced_heuristic();
+
+	bool is_solvable();
+	bool is_complete();
+	void in_order();
+	void print();
+
+	void test_case();
+
+
+	
+private:
+	
+
+
+private:
+	int* configuration_;
+	//bool* explored_;
+	//std::priority_queue<int*> frontier_;
+	int open_ptr_;
+
+};
+
+#endif
+

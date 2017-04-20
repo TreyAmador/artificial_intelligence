@@ -1,19 +1,12 @@
-#include <iostream>
-#include "game_board.h"
+/*
+	entry point for the program
+*/
+
+#include "game.h"
 
 
 int main(int argc, char* argv[]) {
-
-	GameBoard board = GameBoard();
-	
-	board.test_case();
-	board.print();
-
-	//std::cout << board.misplaced_heuristic() << std::endl;
-	//std::cout << board.manhattan_heuristic() << std::endl;
-
-	std::cout << board.explored(0) << std::endl;
-
-	return 0;
+	Game game;
+	return game.run();
 }
 
