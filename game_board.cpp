@@ -6,6 +6,7 @@
 
 namespace {
 	const int ELEMENTS = 9;
+	const int DIMENSION = static_cast<int>(std::sqrt(ELEMENTS));
 }
 
 
@@ -25,16 +26,37 @@ GameBoard::~GameBoard() {
 int GameBoard::misplaced_heuristic() {
 	int displaced = 0;
 	for (int i = 0; i < ELEMENTS; ++i)
-		if (board_[i] != i)
+		if (board_[i] != i && board_[i] != 0)
 			++displaced;
 	return displaced;
 }
 
 
+/*
 int GameBoard::manhattan_heuristic() {
 	int displaced = 0;
+	for (int i = 0; i < ELEMENTS; ++i) {
+		if (board_[i] != 0) {
+			int off = std::abs(board_[i] - i);
+			displaced += off / DIMENSION;
+			displaced += off % DIMENSION;
+		}
+	}
+	return displaced;
+}
+*/
 
-	return 0;
+
+int GameBoard::manhattan_heuristic() {
+	int displacement = 0;
+	for (int i = 0; i < ELEMENTS; ++i) {
+		if (board_[i] != 0) {
+			int r = i / DIMENSION, c = i%DIMENSION;
+			int o = board_[i] / DIMENSION, p = board_[i] % DIMENSION;
+			displacement += (std::abs(r - o) + std::abs(c - p));
+		}
+	}
+	return displacement;
 }
 
 
@@ -72,10 +94,9 @@ bool GameBoard::is_complete() {
 
 
 void GameBoard::print() {
-	int dim = static_cast<int>(std::sqrt(ELEMENTS));
-	for (int r = 0; r < dim; ++r) {
-		for (int c = 0; c < dim; ++c) {
-			std::cout << board_[r*dim + c] << " ";
+	for (int r = 0; r < DIMENSION; ++r) {
+		for (int c = 0; c < DIMENSION; ++c) {
+			std::cout << board_[r*DIMENSION + c] << " ";
 		}
 		std::cout << "\n";
 	}

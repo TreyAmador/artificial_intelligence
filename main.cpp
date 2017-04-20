@@ -5,10 +5,12 @@
 int main(int argc, char* argv[]) {
 
 	GameBoard board = GameBoard();
-	//board.in_order();
+	
 	board.test_case();
 	board.print();
 
+	std::cout << board.misplaced_heuristic() << std::endl;
+	std::cout << board.manhattan_heuristic() << std::endl;
 
 	return 0;
 }
