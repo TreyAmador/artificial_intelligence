@@ -1,6 +1,8 @@
 #ifndef GAME_BOARD_H_
 #define GAME_BOARD_H_
 #include <vector>
+#include <queue>
+
 
 
 class GameBoard {
@@ -23,6 +25,7 @@ public:
 	int hash_key(int* board);
 	bool explored(int key);
 
+
 	
 private:
 	
@@ -31,7 +34,7 @@ private:
 private:
 	int* board_;
 	bool* explored_;
-
+	std::priority_queue<int*> frontier_;
 
 };
 

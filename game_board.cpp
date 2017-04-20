@@ -15,12 +15,12 @@ GameBoard::GameBoard() :
 {
 	// explored_ could also be a hash map
 	// need to reduce size of explored_ to permutation
-	//int hash_size = this->permutations();
-	int hash_size = std::pow(10,ELEMENTS);
+	// int hash_size = this->permutations();
+	int hash_size = static_cast<int>(std::pow(10,ELEMENTS));
 	explored_ = new bool[hash_size];
-	for (int i = 0; i < hash_size; ++i) {
+	for (int i = 0; i < hash_size; ++i)
 		explored_[i] = false;
-	}
+	
 }
 
 
@@ -28,6 +28,10 @@ GameBoard::~GameBoard() {
 	if (board_ != nullptr) {
 		delete[] board_;
 		board_ = nullptr;
+	}
+	if (explored_ != nullptr) {
+		delete[] explored_;
+		explored_ = nullptr;
 	}
 }
 
@@ -66,11 +70,11 @@ void GameBoard::test_case() {
 	board_[8] = 7;
 }
 
+
 void GameBoard::in_order() {
 	for (int i = 0; i < ELEMENTS; ++i)
 		board_[i] = i;
 }
-
 
 
 bool GameBoard::is_solvable() {
@@ -110,7 +114,7 @@ int GameBoard::permutations() {
 int GameBoard::hash_key(int* board) {
 	int key = 0;
 	for (int i = 0; i < ELEMENTS; ++i)
-		key += static_cast<int>(board[i]*std::pow(ELEMENTS-i,10));
+		key += static_cast<int>(board[i]*std::pow(10,ELEMENTS-1-i));
 	return key;
 }
 
