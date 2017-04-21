@@ -32,8 +32,6 @@ private:
 
 private:
 	int* configuration_;
-	//bool* explored_;
-	//std::priority_queue<int*> frontier_;
 	int open_ptr_;
 
 };

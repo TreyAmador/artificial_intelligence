@@ -13,15 +13,6 @@ namespace {
 Board::Board() :
 	configuration_(new int[ELEMENTS])
 {
-	// explored_ could also be a hash map
-	// need to reduce size of explored_ to permutation
-	// int hash_size = this->permutations();
-	//int hash_size = static_cast<int>(std::pow(10,ELEMENTS));
-	//explored_ = new bool[hash_size];
-	//for (int i = 0; i < hash_size; ++i) {
-	//	explored_[i] = false;
-	//}
-
 	// test case
 	// init the gameboard config here
 	// have a user input function in game obj?
@@ -40,10 +31,6 @@ Board::~Board() {
 		delete[] configuration_;
 		configuration_ = nullptr;
 	}
-	//if (explored_ != nullptr) {
-	//	delete[] explored_;
-	//	explored_ = nullptr;
-	//}
 }
 
 

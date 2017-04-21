@@ -1,7 +1,6 @@
 /*
 	entry point for the program
 */
-
 #include "game.h"
 
 
