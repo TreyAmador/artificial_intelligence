@@ -102,6 +102,12 @@ bool Board::is_complete() {
 }
 
 
+void Board::set_configuration(int* config) {
+	for (int i = 0; i < ELEMENTS; ++i)
+		configuration_[i] = config[i];
+}
+
+
 void Board::print() {
 	for (int r = 0; r < DIMENSION; ++r) {
 		for (int c = 0; c < DIMENSION; ++c) {

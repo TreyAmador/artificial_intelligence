@@ -24,6 +24,7 @@ public:
 
 	void test_case();
 
+	void set_configuration(int* config);
 
 	
 private:

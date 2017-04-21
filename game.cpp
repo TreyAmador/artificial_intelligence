@@ -12,26 +12,8 @@ namespace {
 
 
 Game::Game() :
-	board_(Board()),
-	explored_(std::vector<Node*>(VALUES))
-{
-	// this needs to be revised to require fewer entries
-	//explored_.resize(this->permutations(),nullptr);
-	//explored_.resize(values, nullptr);
-
-	//explored_ = std::vector<Node*>(10);
-
-	//explored_.resize(VALUES);
-
-	std::cout << explored_.size() << std::endl;
-	std::cout << "nodes initialized" << std::endl;
-
-	// init frontier
-	// it can be empty now?
-	// or fill it with first config?
-
-
-}
+	board_(Board())
+{}
 
 
 Game::~Game() {
@@ -43,23 +25,33 @@ Game::~Game() {
 int Game::run() {
 
 	
-	Node node_a, node_b;
-	node_a.configuration_ = new int[ELEMENTS];
+	int test[] = {3,1,8,7,4,5,2,6,0};
+
+	/*
+	Node node;
+	node.configuration_ = new int[ELEMENTS];
 	for (int i = 0; i < ELEMENTS; ++i) {
-		node_a.configuration_[i] = i;
+		node.configuration_[i] = test[i];
+		std::cout << test[i] << " ";
 	}
-	//explored_[]
-	int key_a = this->hash_key(node_a.configuration_);
+	std::cout << "\n\n";
+	int key = this->hash_key(test);
+	explored_[key] = new Node(node);
 
-	explored_[key_a] = new Node(node_a);
+	Node* anothernode = explored_[key];
+	anothernode->print();
+	*/
 
-	std::cout << "node a at " << key_a << std::endl;
-	explored_[key_a]->print();
-	
-	
+	board_.set_configuration(test);
+	board_.print();
+	std::cout << board_.manhattan_heuristic() << std::endl;
+	std::cout << board_.misplaced_heuristic() << std::endl;
+
+
+
+
 	return 0;
 }
-
 
 
 // this should be revised...
@@ -70,7 +62,6 @@ int Game::hash_key(int* config) {
 		key += static_cast<int>(config[i] * std::pow(10, ELEMENTS - 1 - i));
 	return key;
 }
-
 
 
 int Game::permutations() {
@@ -86,8 +77,8 @@ bool Game::in_explored(Node* node) {
 }
 
 
-Node* Game::explored() {
-	return explored_[this->hash_key(board_.configuration())];
+Node* Game::explored(int* config) {
+	return explored_[this->hash_key(config)];
 }
 
 

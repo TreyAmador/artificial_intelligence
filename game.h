@@ -1,7 +1,9 @@
 #ifndef GAME_H_
 #define GAME_H_
 #include <vector>
+#include <string>
 #include <queue>
+#include <map>
 #include "board.h"
 struct Node;
 
@@ -29,10 +31,12 @@ private:
 	// return explored node,
 	// or nullptr
 	// then test if nullptr
-	Node* explored();
+	Node* explored(int* config);
 
 	// test after returning node
 	bool in_explored(Node* node);
+
+	//void read_file(const std::string& filepath);
 
 
 private:
@@ -41,9 +45,9 @@ private:
 
 	// this should be hashed-to
 	// test the config of the game, then check against explored set
-	// this could be implemented as an unordered_map as well
-	std::vector<Node*> explored_;
-	//Node* explored_;
+	// std::vector<Node*> explored_;
+	std::map<int, Node*> explored_;
+
 
 	// set of leaf nodes
 	std::priority_queue<Node*> frontier_;
