@@ -17,6 +17,14 @@ public:
 typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> FrontierQueue;
 
 
+enum {
+	UP = -3,
+	DOWN = 3,
+	LEFT = -1,
+	RIGHT = 1
+};
+
+
 class Game {
 
 
@@ -32,7 +40,7 @@ public:
 
 private:
 	// hashes the configs
-	//int hash_key(int* board);
+	//int hash_key(int* config);
 
 	// this needs to be revised
 	int permutations();
@@ -44,10 +52,7 @@ private:
 	bool left_open(int col);
 	bool right_open(int col);
 
-	void move_up(Node* node);
-	void move_down(Node* node);
-	void move_left(Node* node);
-	void move_right(Node* node);
+	void move(Node* node, int dir);
 
 	void swap_indeces(int* config, int a, int b);
 
@@ -70,6 +75,8 @@ private:
 
 	// get user input
 	int* prompt();
+
+	int* copy_config(int* config);
 
 	void reset();
 

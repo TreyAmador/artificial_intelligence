@@ -27,10 +27,14 @@ public:
 		return g_ + h_;
 	}
 	void print() {
-		std::cout << "Config: ";
-		for (int i = 0; i < 9; ++i)
-			std::cout << configuration_[i] << " ";
-		std::cout << "\n" << 
+		std::cout << "Config:\n";
+		for (int r = 0; r < 3; ++r) {
+			for (int c = 0; c < 3; ++c) {
+				std::cout << configuration_[r*3+c] << " ";
+			}
+			std::cout << "\n";
+		}
+		std::cout << 
 			"g(n) = " << g_ << ", " << 
 			"h(n) = " << h_ << "\n" << std::endl;
 	}

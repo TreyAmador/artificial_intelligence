@@ -46,6 +46,8 @@ int Game::run() {
 			nullptr,
 			this->open_slot(config)));
 
+		frontier_.top()->print();
+
 		// while goal not reached ...
 
 		this->move();
@@ -59,6 +61,7 @@ int Game::run() {
 
 
 		++iter;
+		std::cout << "\n\n" << std::endl;
 	}
 
 	
@@ -79,18 +82,23 @@ void Game::move() {
 	Node* node = frontier_.top();
 	int row = node->open_/DIMENSION,
 		col = node->open_%DIMENSION;
+
 	if (this->top_open(row)) {
-		// move_up
+		this->move(node, DOWN);
 	}
 	if (this->bottom_open(row)) {
-		// move_down
+		this->move(node, UP);
 	}
 	if (this->right_open(col)) {
-		// move_right
+		this->move(node, LEFT);
 	}
 	if (this->left_open(col)) {
-		// move_left
+		this->move(node, RIGHT);
 	}
+
+	//explored_['key'] = node;
+	frontier_.pop();
+
 
 }
 
@@ -115,24 +123,24 @@ bool Game::right_open(int col) {
 }
 
 
-void Game::move_up(Node* node) {
+void Game::move(Node* node, int dir) {
 
-	//Node* child = new Node();
-}
+	int* config = this->copy_config(node->configuration_);	
+	int open = node->open_;
+	this->swap_indeces(config, open, open+dir);
 
+	// if config in explored then return
 
-void Game::move_down(Node* node) {
+	Node* child = new Node(
+		config,
+		node->g_ + 1,
+		this->manhattan_heuristic(config),
+		node,
+		open + dir);
 
-}
+	frontier_.push(child);
 
-
-void Game::move_left(Node* node) {
-
-}
-
-
-void Game::move_right(Node* node) {
-
+	child->print();
 }
 
 
@@ -182,6 +190,14 @@ int Game::permutations() {
 	for (int i = ELEMENTS; i >= 2; --i)
 		factorial *= i;
 	return factorial;
+}
+
+
+int* Game::copy_config(int* config) {
+	int* copy = new int[ELEMENTS];
+	for (int i = 0; i < ELEMENTS; ++i)
+		copy[i] = config[i];
+	return copy;
 }
 
 
