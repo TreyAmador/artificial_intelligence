@@ -6,6 +6,7 @@
 namespace {
 	const int ELEMENTS = 9;
 	const int DIMENSION = static_cast<int>(std::sqrt(ELEMENTS));
+	
 
 	// need to make this vector smaller!
 	//const int VALUES = 123456780;
@@ -31,27 +32,21 @@ Game::~Game() {
 // init game board here
 int Game::run() {
 
-	// temporary file reader for testing purposes
 	FileManager manager;
 	std::vector<int*> configs = manager.get_configs("tests/configs.txt");
-
-	// this will be replaced by user input
 	std::vector<int*>::iterator iter = configs.begin();
+	
+	// continues until user input complete
 	while (iter != configs.end()) {
-		// int* config = manager.prompt();
 		int* config = *iter;
-		
-
-
-
 		frontier_.push(new Node(
 			config, 0,
 			this->manhattan_heuristic(config),
-			nullptr));
+			nullptr,
+			this->open_slot(config)));
 
 		
 
-		
 
 
 		//this->reset();
@@ -63,44 +58,28 @@ int Game::run() {
 		++iter;
 	}
 
-	Node* node = nullptr;
-	while (!frontier_.empty()) {
-		node = frontier_.top();
-		node->print();
-		frontier_.pop();
-	}
-
-	/*
-	Node* node = nullptr;
-	do {
-		node = frontier_.top();
-		node->print();
-		frontier_.pop();
-		//node->print();
-	} while (node->parent_ != nullptr);
-	this->reset();
-	*/
-
-
-
-
-	/*
-	// have a while loop prompting user
-	int* config = this->prompt();
-	//frontier_.push(new Node(config, 0, 0, nullptr));
-
 	
-
-	// solve here!
-
-	
-	*/
-
-
-
-
+	//Node* node = nullptr;
+	//while (!frontier_.empty()) {
+	//	node = frontier_.top();
+	//	node->print();
+	//	frontier_.pop();
+	//}
 
 	return 0;
+}
+
+
+void Game::move(Node*& node) {
+
+}
+
+
+int Game::open_slot(int* config) {
+	for (int i = 0; i < ELEMENTS; ++i)
+		if (config[i] == 0)
+			return i;
+	return -1;
 }
 
 
@@ -141,13 +120,6 @@ int Game::permutations() {
 bool Game::in_explored(Node* node) {
 	return node != nullptr;
 }
-
-
-//Node* Game::explored(int* config) {
-//	return explored_[this->hash_key(config)];
-//}
-
-
 
 
 int Game::misplaced_heuristic(int* config) {

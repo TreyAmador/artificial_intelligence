@@ -5,12 +5,13 @@
 
 struct Node {
 
+
 public:
-	//Node() :
-	//	configuration_(nullptr),g_(0),h_(0),parent_(nullptr)
-	//{}
-	Node(int* config, int g, int h, Node* parent) :
-		configuration_(config),g_(g),h_(h),parent_(parent)
+	Node(int* config, int g, int h, Node* parent, int open) :
+		configuration_(config),
+		g_(g),h_(h),
+		parent_(parent),
+		open_(open)
 	{}
 	~Node() {
 		if (configuration_ != nullptr) {
@@ -22,7 +23,9 @@ public:
 			parent_ = nullptr;
 		}
 	}
-	
+	int cost() {
+		return g_ + h_;
+	}
 	void print() {
 		std::cout << "Config: ";
 		for (int i = 0; i < 9; ++i)
@@ -37,8 +40,9 @@ public:
 	// the actual game board
 	// hash function will match board configs to this
 	int* configuration_;
-	int g_, h_;
+	int g_,h_;
 	Node* parent_;
+	int open_;
 
 
 };
