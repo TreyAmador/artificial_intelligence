@@ -18,16 +18,12 @@ public:
 			delete[] configuration_;
 			configuration_ = nullptr;
 		}
-		if (parent_ != nullptr) {
-			delete parent_;
-			parent_ = nullptr;
-		}
 	}
 	int cost() {
 		return g_ + h_;
 	}
 	void print() {
-		std::cout << "Config:\n";
+		std::cout << "Configuration:\n";
 		for (int r = 0; r < 3; ++r) {
 			for (int c = 0; c < 3; ++c) {
 				std::cout << configuration_[r*3+c] << " ";
@@ -36,7 +32,21 @@ public:
 		}
 		std::cout << 
 			"g(n) = " << g_ << ", " << 
-			"h(n) = " << h_ << "\n" << std::endl;
+			"h(n) = " << h_ << "\n" <<
+			"open: " << open_ << "\n\n";
+		
+		std::cout << "Parent:\n";
+		if (parent_ != nullptr) {
+			for (int r = 0; r < 3; ++r) {
+				for (int c = 0; c < 3; ++c) {
+					std::cout << parent_->configuration_[r * 3 + c] << " ";
+				}
+				std::cout << "\n";
+			}
+		} else {
+			std::cout << "None\n";
+		}
+		std::cout << "\n\n" << std::endl;
 	}
 
 

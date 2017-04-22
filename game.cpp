@@ -6,18 +6,7 @@
 namespace {
 	const int ELEMENTS = 9;
 	const int DIMENSION = static_cast<int>(std::sqrt(ELEMENTS));
-	
-
-	// need to make this vector smaller!
-	//const int VALUES = 123456780;
-	//const int FACTORIAL = 362880;
 }
-
-/*
-Game::Game() :
-	board_(Board())
-{}
-*/
 
 Game::Game() {
 
@@ -49,28 +38,16 @@ int Game::run() {
 		frontier_.top()->print();
 
 		// while goal not reached ...
+		for (int i = 0; i < 3; ++i)
+			this->move();
 
-		this->move();
-		
-
-
-		//this->reset();
+		// move up tree to trace path
 
 
-
-
+		this->reset();
 
 		++iter;
-		std::cout << "\n\n" << std::endl;
 	}
-
-	
-	//Node* node = nullptr;
-	//while (!frontier_.empty()) {
-	//	node = frontier_.top();
-	//	node->print();
-	//	frontier_.pop();
-	//}
 
 	return 0;
 }
@@ -80,6 +57,8 @@ int Game::run() {
 void Game::move() {
 
 	Node* node = frontier_.top();
+	frontier_.pop();
+
 	int row = node->open_/DIMENSION,
 		col = node->open_%DIMENSION;
 
@@ -95,11 +74,10 @@ void Game::move() {
 	if (this->left_open(col)) {
 		this->move(node, RIGHT);
 	}
-
-	//explored_['key'] = node;
-	frontier_.pop();
-
-
+	
+	int key = this->hash_key(node->configuration_);
+	this->explored_[key] = node;
+	
 }
 
 
@@ -130,17 +108,21 @@ void Game::move(Node* node, int dir) {
 	this->swap_indeces(config, open, open+dir);
 
 	// if config in explored then return
+	int key = this->hash_key(config);
+	if (explored_.count(key))
+		return;
 
 	Node* child = new Node(
 		config,
 		node->g_ + 1,
 		this->manhattan_heuristic(config),
 		node,
-		open + dir);
+		open+dir);
+
+	child->print();
 
 	frontier_.push(child);
 
-	child->print();
 }
 
 
@@ -174,7 +156,6 @@ int* Game::prompt() {
 }
 
 
-/*
 // this should be revised...
 // lots of wasted space!
 int Game::hash_key(int* config) {
@@ -183,7 +164,7 @@ int Game::hash_key(int* config) {
 		key += static_cast<int>(config[i] * std::pow(10, ELEMENTS - 1 - i));
 	return key;
 }
-*/
+
 
 int Game::permutations() {
 	int factorial = 1;
@@ -245,6 +226,13 @@ void Game::reset() {
 			value = nullptr;
 		}
 	}
+}
+
+
+bool Game::complete() {
+
+
+
 }
 
 

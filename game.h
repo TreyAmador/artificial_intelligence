@@ -10,7 +10,7 @@
 class Comparator {
 public:
 	bool operator()(Node*& a, Node*& b) {
-		return a->h_ > b->h_;
+		return a->h_+a->g_ > b->h_+b->g_;
 	}
 };
 
@@ -40,7 +40,7 @@ public:
 
 private:
 	// hashes the configs
-	//int hash_key(int* config);
+	int hash_key(int* config);
 
 	// this needs to be revised
 	int permutations();
@@ -51,6 +51,8 @@ private:
 	bool bottom_open(int row);
 	bool left_open(int col);
 	bool right_open(int col);
+
+	//void create_node(int* config);
 
 	void move(Node* node, int dir);
 
@@ -80,8 +82,9 @@ private:
 
 	void reset();
 
-
 	//void test_cases();
+
+	bool complete();
 
 
 
