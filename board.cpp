@@ -82,6 +82,17 @@ void Board::test_case() {
 }
 
 
+// this should be revised...
+// lots of wasted space!
+int Board::hash_key(int* config) {
+	int key = 0;
+	for (int i = 0; i < ELEMENTS; ++i)
+		key += static_cast<int>(config[i] * std::pow(10, ELEMENTS - 1 - i));
+	return key;
+}
+
+
+
 void Board::in_order() {
 	for (int i = 0; i < ELEMENTS; ++i)
 		configuration_[i] = i;

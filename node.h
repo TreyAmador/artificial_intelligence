@@ -6,9 +6,9 @@
 struct Node {
 
 public:
-	Node() :
-		configuration_(nullptr),g_(0),h_(0),parent_(nullptr)
-	{}
+	//Node() :
+	//	configuration_(nullptr),g_(0),h_(0),parent_(nullptr)
+	//{}
 	Node(int* config, int g, int h, Node* parent) :
 		configuration_(config),g_(g),h_(h),parent_(parent)
 	{}
