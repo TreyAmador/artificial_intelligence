@@ -38,6 +38,7 @@ int Game::run() {
 	
 	// continues until user input complete
 	while (iter != configs.end()) {
+
 		int* config = *iter;
 		frontier_.push(new Node(
 			config, 0,
@@ -45,8 +46,10 @@ int Game::run() {
 			nullptr,
 			this->open_slot(config)));
 
-		
+		// while goal not reached ...
 
+		this->move();
+		
 
 
 		//this->reset();
@@ -70,8 +73,73 @@ int Game::run() {
 }
 
 
-void Game::move(Node*& node) {
+// pass heuristic function in this method?
+void Game::move() {
 
+	Node* node = frontier_.top();
+	int row = node->open_/DIMENSION,
+		col = node->open_%DIMENSION;
+	if (this->top_open(row)) {
+		// move_up
+	}
+	if (this->bottom_open(row)) {
+		// move_down
+	}
+	if (this->right_open(col)) {
+		// move_right
+	}
+	if (this->left_open(col)) {
+		// move_left
+	}
+
+}
+
+
+bool Game::top_open(int row) {
+	return row < DIMENSION-1;
+}
+
+
+bool Game::bottom_open(int row) {
+	return row > 0;
+}
+
+
+bool Game::left_open(int col) {
+	return col < DIMENSION - 1;
+}
+
+
+bool Game::right_open(int col) {
+	return col > 0;
+}
+
+
+void Game::move_up(Node* node) {
+
+	//Node* child = new Node();
+}
+
+
+void Game::move_down(Node* node) {
+
+}
+
+
+void Game::move_left(Node* node) {
+
+}
+
+
+void Game::move_right(Node* node) {
+
+}
+
+
+void Game::swap_indeces(int* config, int a, int b) {
+	int temp = config[a];
+	config[a] = config[b];
+	config[b] = temp;
 }
 
 

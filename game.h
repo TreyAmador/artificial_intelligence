@@ -4,7 +4,6 @@
 #include <string>
 #include <queue>
 #include <map>
-#include "board.h"
 #include "node.h"
 
 
@@ -16,14 +15,6 @@ public:
 };
 
 typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> FrontierQueue;
-
-
-enum Direction {
-	UP = -3,
-	DOWN = 3,
-	LEFT = -1,
-	RIGHT = 1
-};
 
 
 class Game {
@@ -46,7 +37,19 @@ private:
 	// this needs to be revised
 	int permutations();
 
-	void move(Node*& node);
+	void move();
+
+	bool top_open(int row);
+	bool bottom_open(int row);
+	bool left_open(int col);
+	bool right_open(int col);
+
+	void move_up(Node* node);
+	void move_down(Node* node);
+	void move_left(Node* node);
+	void move_right(Node* node);
+
+	void swap_indeces(int* config, int a, int b);
 
 	// return explored node,
 	// or nullptr
@@ -76,9 +79,7 @@ private:
 
 
 private:
-	// direction enum
-	Direction direction_;
-
+	
 
 	// this should be hashed-to
 	// test the config of the game, then check against explored set
