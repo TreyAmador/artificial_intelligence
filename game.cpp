@@ -1,6 +1,9 @@
 /*
 	main game
 */
+
+#include <time.h>
+
 #include "utilities.h"
 #include "interface.h"
 #include "game.h"
@@ -214,9 +217,9 @@ int Game::run() {
 
 	int* config = *iter;
 
-	this->solve_heuristic(
-		UTIL::copy_ptr(config,ELEMENTS),
-		&Game::manhattan_heuristic);
+	//this->solve_heuristic(
+	//	UTIL::copy_ptr(config,ELEMENTS),
+	//	&Game::manhattan_heuristic);
 
 
 	
@@ -225,6 +228,9 @@ int Game::run() {
 
 		// manhattan_solve(config, function)
 		// misplaced_solve(config, function)
+
+
+		clock_t begin = clock();
 
 		if (this->is_solvable(config)) {
 			this->add_node(config, 0,
@@ -237,6 +243,11 @@ int Game::run() {
 		} else {
 			interface.not_solvable();
 		}
+
+		clock_t span = clock() - begin;
+		std::cout << "This required " << span/CLOCKS_PER_SEC << std::endl;
+
+
 		++iter;
 	}	
 	return 0;
