@@ -2,7 +2,7 @@
 	main game
 */
 #include "utilities.h"
-#include "media.h"
+#include "interface.h"
 #include "game.h"
 #include "node.h"
 
@@ -28,7 +28,6 @@ void Game::select_move() {
 
 	Node* node = frontier_.top();
 	frontier_.pop();
-
 	int row = node->open_/DIMENSION,
 		col = node->open_%DIMENSION;
 
@@ -43,7 +42,6 @@ void Game::select_move() {
 	
 	int key = this->hash_key(node->configuration_);
 	this->explored_[key] = node;
-	
 }
 
 
@@ -61,6 +59,11 @@ void Game::move(Node* node, int dir) {
 	this->add_node(config, node->g_+1,
 		this->manhattan_heuristic(config),
 		node, open+dir);
+}
+
+
+void Game::solve_heuristic(int* config, int (Game::*heuristic)(int*)) {
+	std::cout << "in the solve heuristic fxn" << std::endl;
 }
 
 
@@ -104,6 +107,7 @@ int Game::hash_key(int* config) {
 }
 
 
+// perhaps copy config here rather than in move?
 void Game::add_node(
 	int* config,
 	int cost, 
@@ -121,35 +125,40 @@ void Game::add_node(
 }
 
 
-bool Game::top_open(int row) {
+inline bool Game::top_open(int row) {
 	return row < DIMENSION - 1;
 }
 
 
-bool Game::bottom_open(int row) {
+inline bool Game::bottom_open(int row) {
 	return row > 0;
 }
 
 
-bool Game::left_open(int col) {
+inline bool Game::left_open(int col) {
 	return col < DIMENSION - 1;
 }
 
 
-bool Game::right_open(int col) {
+inline bool Game::right_open(int col) {
 	return col > 0;
 }
 
 
-bool Game::in_explored(Node* node) {
-	return node != nullptr;
+inline bool Game::is_complete() {
+	return frontier_.top()->h_ == 0;
 }
 
 
-bool Game::is_complete() {
-	if (frontier_.top()->h_ == 0)
-		return true;
-	return false;
+bool Game::is_solvable(int* config) {
+	int inversions = 0;
+	for (int i = 0; i < ELEMENTS; ++i)
+		if (config[i] != 0)
+			for (int j = i + 1; j < ELEMENTS; ++j)
+				if (config[i] > config[j] && config[j] != 0)
+					++inversions;
+	std::cout << "The number of inversions is " << inversions << std::endl;
+	return inversions % 2 == 0;
 }
 
 
@@ -196,21 +205,40 @@ void Game::clear_explored() {
 // init game board here
 int Game::run() {
 
-	Media media;
-	std::vector<int*> configs = media.get_configs("tests/configs.txt");
+
+	
+	
+	Interface interface(ELEMENTS);
+	std::vector<int*> configs = interface.get_configs("tests/configs.txt");
 	std::vector<int*>::iterator iter = configs.begin();
 
+	int* config = *iter;
+
+	this->solve_heuristic(
+		UTIL::copy_ptr(config,ELEMENTS),
+		&Game::manhattan_heuristic);
+
+
+	
 	while (iter != configs.end()) {
 		int* config = *iter;
-		this->add_node(config, 0, 
-			this->manhattan_heuristic(config), 
-			nullptr, this->open_slot(config));
-		while (!this->is_complete())
-			this->select_move();
-		media.output(this->path(frontier_.top()));
-		this->reset();
+
+		// manhattan_solve(config, function)
+		// misplaced_solve(config, function)
+
+		if (this->is_solvable(config)) {
+			this->add_node(config, 0,
+				this->manhattan_heuristic(config),
+				nullptr, this->open_slot(config));
+			while (!this->is_complete())
+				this->select_move();
+			interface.output(this->path(frontier_.top()));
+			this->reset();
+		} else {
+			interface.not_solvable();
+		}
 		++iter;
-	}
+	}	
 	return 0;
 }
 

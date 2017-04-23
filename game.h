@@ -14,6 +14,7 @@ public:
 	}
 };
 
+
 typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> Frontier;
 typedef std::map<int, Node*> Explored;
 typedef Explored::iterator ExIter;
@@ -39,6 +40,8 @@ private:
 	void select_move();
 	void move(Node* node, int dir);
 	
+	void solve_heuristic(int* config, int (Game::*heuristic)(int*));
+
 	int manhattan_heuristic(int* config);
 	int misplaced_heuristic(int* config);
 
@@ -51,12 +54,13 @@ private:
 		Node* parent,
 		int open);
 	
-	bool top_open(int row);
-	bool bottom_open(int row);
-	bool left_open(int col);
-	bool right_open(int col);
-	bool in_explored(Node* node);
-	bool is_complete();
+	inline bool top_open(int row);
+	inline bool bottom_open(int row);
+	inline bool left_open(int col);
+	inline bool right_open(int col);
+
+	inline bool is_complete();
+	bool is_solvable(int* config);
 
 	std::vector<Node*> path(Node* node);
 	void reset();
