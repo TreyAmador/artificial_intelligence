@@ -207,20 +207,10 @@ int Game::run() {
 			nullptr, this->open_slot(config));
 		while (!this->is_complete())
 			this->select_move();
-		
-		//frontier_.top()->print();
-		//frontier_.top()->parent_->print();
-		//frontier_.top()->parent_->parent_->print();
-		//frontier_.top()->parent_->parent_->parent_->print();
-		//media.output(this->path(frontier_.top()));
-		
-
-		
-		
+		media.output(this->path(frontier_.top()));
 		this->reset();
 		++iter;
 	}
 	return 0;
 }
-
 

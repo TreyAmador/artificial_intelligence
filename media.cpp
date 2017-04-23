@@ -55,11 +55,7 @@ int* Media::prompt() {
 
 
 void Media::output(std::vector<Node*>& path) {
-	std::vector<Node*>::iterator node_iter = path.begin();
-	while (node_iter != path.begin()) {
-		Node* node = *node_iter;
-		node->print();
-		++node_iter;
-	}
+	for (size_t i = 0; i < path.size(); ++i)
+		path[i]->print();
 }
 
