@@ -1,7 +1,8 @@
-#include "media.h"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <sstream>
+#include "media.h"
+#include "node.h"
 
 
 namespace {
@@ -23,9 +24,8 @@ std::vector<int*> Media::get_configs(const std::string& filepath) {
 	std::string line;
 	std::vector<int*> configs;
 	std::ifstream input(filepath.c_str());
-	while (std::getline(input, line)) {
+	while (std::getline(input, line))
 		configs.push_back(this->convert(line));
-	}
 	return configs;
 }
 
@@ -54,4 +54,12 @@ int* Media::prompt() {
 }
 
 
+void Media::output(std::vector<Node*>& path) {
+	std::vector<Node*>::iterator node_iter = path.begin();
+	while (node_iter != path.begin()) {
+		Node* node = *node_iter;
+		node->print();
+		++node_iter;
+	}
+}
 

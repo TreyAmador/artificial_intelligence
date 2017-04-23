@@ -2,6 +2,7 @@
 #define FILEREADER_H_
 #include <string>
 #include <vector>
+struct Node;
 
 
 class Media {
@@ -15,7 +16,7 @@ public:
 	std::vector<int*> get_configs(const std::string& filepath);
 	int* convert(const std::string& filepath);
 	int* prompt();
-
+	void output(std::vector<Node*>& path);
 
 private:
 

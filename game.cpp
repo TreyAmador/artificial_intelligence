@@ -153,6 +153,17 @@ bool Game::is_complete() {
 }
 
 
+std::vector<Node*> Game::path(Node* init) {
+	Node* node = init;
+	std::vector<Node*> path;
+	while (node != nullptr) {
+		path.insert(path.begin(), node);
+		node = node->parent_;
+	}
+	return path;
+}
+
+
 void Game::reset() {
 	this->clear_frontier();
 	this->clear_explored();
@@ -161,7 +172,7 @@ void Game::reset() {
 
 void Game::clear_frontier() {
 	while (!frontier_.empty()) {
-		auto elem = frontier_.top();
+		Node* elem = frontier_.top();
 		if (elem != nullptr) {
 			delete elem;
 			elem = nullptr;
@@ -190,18 +201,23 @@ int Game::run() {
 	std::vector<int*>::iterator iter = configs.begin();
 
 	while (iter != configs.end()) {
-		
 		int* config = *iter;
-
 		this->add_node(config, 0, 
 			this->manhattan_heuristic(config), 
 			nullptr, this->open_slot(config));
-		
 		while (!this->is_complete())
 			this->select_move();
 		
-		this->reset();
+		//frontier_.top()->print();
+		//frontier_.top()->parent_->print();
+		//frontier_.top()->parent_->parent_->print();
+		//frontier_.top()->parent_->parent_->parent_->print();
+		//media.output(this->path(frontier_.top()));
+		
 
+		
+		
+		this->reset();
 		++iter;
 	}
 	return 0;

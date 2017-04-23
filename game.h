@@ -14,7 +14,9 @@ public:
 	}
 };
 
-typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> FrontierQueue;
+typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> Frontier;
+typedef std::map<int, Node*> Explored;
+typedef Explored::iterator ExIter;
 
 
 enum {
@@ -56,14 +58,15 @@ private:
 	bool in_explored(Node* node);
 	bool is_complete();
 
+	std::vector<Node*> path(Node* node);
 	void reset();
 	void clear_frontier();
 	void clear_explored();
 
 
 private:
-	std::map<int, Node*> explored_;
-	FrontierQueue frontier_;
+	Explored explored_;
+	Frontier frontier_;
 	
 
 };
