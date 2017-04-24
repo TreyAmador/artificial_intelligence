@@ -208,9 +208,6 @@ void Game::clear_explored() {
 // init game board here
 int Game::run() {
 
-
-	
-	
 	Interface interface(ELEMENTS);
 	std::vector<int*> configs = interface.get_configs("tests/configs.txt");
 	std::vector<int*>::iterator iter = configs.begin();
@@ -221,8 +218,6 @@ int Game::run() {
 	//	UTIL::copy_ptr(config,ELEMENTS),
 	//	&Game::manhattan_heuristic);
 
-
-	
 	while (iter != configs.end()) {
 		int* config = *iter;
 
