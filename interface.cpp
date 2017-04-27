@@ -3,6 +3,13 @@
 #include <sstream>
 #include "interface.h"
 #include "node.h"
+typedef std::vector<Node*>::iterator nIter;
+
+
+namespace {
+	const std::string PROMPT = "Enter a string of non-repeating digits, 0 through 8: ";
+	const std::string EXIT_COMMAND = "exit";
+}
 
 
 Interface::Interface(int elems) :
@@ -35,40 +42,55 @@ int* Interface::convert(const std::string& config) {
 
 
 bool Interface::input_valid(const std::string& input) {
-	if (input.size() != ELEMENTS)
-		return false;
 	std::vector<int> digits(ELEMENTS, 0);
-	for (int i = 0; ELEMENTS; ++i) {
-		int d = input[i] - '0';
-		if (d <= 8 && d >= 0)
+	for (size_t i = 0; i < input.size(); ++i) {
+		int d = static_cast<int>(input[i]-'0');
+		if (d >= 0 && d <= 8) {
 			++digits[d];
-		else
-			return false;
+		}
 	}
-	for (int i = 0; i < ELEMENTS; ++i)
-		if (digits[i] != 1)
+	for (size_t i = 0; i < digits.size(); ++i) {
+		if (digits[i] != 1) {
 			return false;
+		}
+	}
 	return true;
 }
 
 
 int* Interface::prompt() {
+	std::string input("");
+	while(!this->exit_request(input)) {
+		std::cout << PROMPT;
+		if (this->input_valid(input))
+			return this->convert(input);
+		else
+			std::cout << "Input not valid." << std::endl;
+	}
+	return nullptr;
+}
 
+
+/*
+int* Interface::prompt() {
 	int* config = nullptr;
 	while (true) {
 		std::string input;
 		std::cout << "Enter a string of numbers 0 to 8\n";
 		std::cin >> input;
-		
 		if (this->input_valid(input)) {
-			std::cout << "input valid" << std::endl;
 			config = this->convert(input);
 		} else {
-			std::cout << "input not valid" << std::endl;
+			std::cout << "Input not valid." << std::endl;
 		}
 	}
-
 	return config;
+}
+*/
+
+
+bool Interface::exit_request(const std::string& input) {
+	return input == EXIT_COMMAND;
 }
 
 
@@ -79,8 +101,23 @@ void Interface::not_solvable() {
 }
 
 
-void Interface::output(std::vector<Node*>& path) {
-	for (size_t i = 0; i < path.size(); ++i)
-		path[i]->print();
+void Interface::print_node(Node* node) {
+	int dim = static_cast<int>(std::sqrt(ELEMENTS));
+	int* config = node->configuration_;
+	for (int r = 0; r < dim; ++r) {
+		for (int c = 0; c < dim; ++c) {
+			std::cout << config[r*dim+c] << " ";
+		}
+		std::cout << "\n";
+	}
+	std::cout << "g(n) = " << node->g_ << ", "
+		<< "h(n) = " << node->h_ << "\n\n";
+}
+
+
+void Interface::print_path(std::vector<Node*>& path) {
+	std::cout << "State path\n" << std::endl;
+	for (nIter iter = path.begin(); iter != path.end(); ++iter)
+		this->print_node(*iter);
 }
 

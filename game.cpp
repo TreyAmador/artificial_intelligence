@@ -205,6 +205,9 @@ void Game::clear_explored() {
 }
 
 
+
+/*
+
 // init game board here
 int Game::run() {
 
@@ -212,7 +215,7 @@ int Game::run() {
 	std::vector<int*> configs = interface.get_configs("tests/configs.txt");
 	std::vector<int*>::iterator iter = configs.begin();
 
-	int* config = *iter;
+	//int* config = *iter;
 
 	//this->solve_heuristic(
 	//	UTIL::copy_ptr(config,ELEMENTS),
@@ -224,27 +227,55 @@ int Game::run() {
 		// manhattan_solve(config, function)
 		// misplaced_solve(config, function)
 
-
-		clock_t begin = clock();
-
 		if (this->is_solvable(config)) {
 			this->add_node(config, 0,
 				this->manhattan_heuristic(config),
 				nullptr, this->open_slot(config));
 			while (!this->is_complete())
 				this->select_move();
-			interface.output(this->path(frontier_.top()));
+			interface.print_path(this->path(frontier_.top()));
 			this->reset();
 		} else {
 			interface.not_solvable();
 		}
 
-		clock_t span = clock() - begin;
-		std::cout << "This required " << span/CLOCKS_PER_SEC << std::endl;
+		++iter;
 
+	}
+
+	return 0;
+}
+
+*/
+
+
+
+// init game board here
+int Game::run() {
+
+	Interface interface(ELEMENTS);
+	
+	while (iter != configs.end()) {
+		int* config = *iter;
+
+		
+		if (this->is_solvable(config)) {
+			this->add_node(config, 0,
+				this->manhattan_heuristic(config),
+				nullptr, this->open_slot(config));
+			while (!this->is_complete())
+				this->select_move();
+			interface.print_path(this->path(frontier_.top()));
+			this->reset();
+		}
+		else {
+			interface.not_solvable();
+		}
 
 		++iter;
-	}	
+
+	}
+
 	return 0;
 }
 
