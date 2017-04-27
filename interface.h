@@ -15,10 +15,11 @@ public:
 	int* convert(const std::string& filepath);
 
 	int* prompt();
+	void not_solvable();
 	bool input_valid(const std::string& input);
 	bool exit_request(const std::string& input);
-	void not_solvable();
-
+	int completed();
+	
 	void print_path(std::vector<Node*>& path);
 	void print_node(Node* node);
 

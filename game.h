@@ -59,8 +59,9 @@ private:
 	inline bool left_open(int col);
 	inline bool right_open(int col);
 
-	inline bool is_complete();
 	bool is_solvable(int* config);
+	inline bool is_complete();
+	inline bool exit_requested(int* config);
 
 	std::vector<Node*> path(Node* node);
 	void reset();

@@ -8,6 +8,7 @@ typedef std::vector<Node*>::iterator nIter;
 
 namespace {
 	const std::string PROMPT = "Enter a string of non-repeating digits, 0 through 8: ";
+	const std::string INVALID_INPUT = "Input not valid.";
 	const std::string EXIT_COMMAND = "exit";
 }
 
@@ -49,48 +50,37 @@ bool Interface::input_valid(const std::string& input) {
 			++digits[d];
 		}
 	}
-	for (size_t i = 0; i < digits.size(); ++i) {
-		if (digits[i] != 1) {
+	for (size_t i = 0; i < digits.size(); ++i)
+		if (digits[i] != 1)
 			return false;
-		}
-	}
 	return true;
 }
 
 
 int* Interface::prompt() {
 	std::string input("");
-	while(!this->exit_request(input)) {
+	do {
 		std::cout << PROMPT;
+		std::getline(std::cin, input);
 		if (this->input_valid(input))
 			return this->convert(input);
+		else if (this->exit_request(input))
+			return nullptr;
 		else
-			std::cout << "Input not valid." << std::endl;
-	}
+			std::cout << INVALID_INPUT << std::endl;
+	} while (true);
 	return nullptr;
 }
 
 
-/*
-int* Interface::prompt() {
-	int* config = nullptr;
-	while (true) {
-		std::string input;
-		std::cout << "Enter a string of numbers 0 to 8\n";
-		std::cin >> input;
-		if (this->input_valid(input)) {
-			config = this->convert(input);
-		} else {
-			std::cout << "Input not valid." << std::endl;
-		}
-	}
-	return config;
-}
-*/
-
-
 bool Interface::exit_request(const std::string& input) {
 	return input == EXIT_COMMAND;
+}
+
+
+int Interface::completed() {
+	std::cout << "Simulation ended." << std::endl;
+	return 0;
 }
 
 

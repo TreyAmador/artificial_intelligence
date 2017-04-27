@@ -148,11 +148,6 @@ inline bool Game::right_open(int col) {
 }
 
 
-inline bool Game::is_complete() {
-	return frontier_.top()->h_ == 0;
-}
-
-
 bool Game::is_solvable(int* config) {
 	int inversions = 0;
 	for (int i = 0; i < ELEMENTS; ++i)
@@ -162,6 +157,16 @@ bool Game::is_solvable(int* config) {
 					++inversions;
 	std::cout << "The number of inversions is " << inversions << std::endl;
 	return inversions % 2 == 0;
+}
+
+
+inline bool Game::is_complete() {
+	return frontier_.top()->h_ == 0;
+}
+
+
+inline bool Game::exit_requested(int* config) {
+	return config == nullptr;
 }
 
 
@@ -203,7 +208,6 @@ void Game::clear_explored() {
 		}
 	}
 }
-
 
 
 /*
@@ -252,30 +256,23 @@ int Game::run() {
 
 // init game board here
 int Game::run() {
-
 	Interface interface(ELEMENTS);
-	
-	while (iter != configs.end()) {
-		int* config = *iter;
-
-		
+	while (true) {
+		int* config = interface.prompt();
+		if (this->exit_requested(config))
+			return interface.completed();
 		if (this->is_solvable(config)) {
-			this->add_node(config, 0,
-				this->manhattan_heuristic(config),
+			this->add_node(config, 0, 
+				this->manhattan_heuristic(config), 
 				nullptr, this->open_slot(config));
 			while (!this->is_complete())
 				this->select_move();
 			interface.print_path(this->path(frontier_.top()));
 			this->reset();
-		}
-		else {
+		} else {
 			interface.not_solvable();
 		}
-
-		++iter;
-
 	}
-
 	return 0;
 }
 
