@@ -90,6 +90,16 @@ void Interface::not_solvable() {
 }
 
 
+void Interface::print_heuristic(const std::string& func) {
+	if (func == "manhattan_heuristic")
+		std::cout << "Manhattan Heuristic" << std::endl;
+	else if (func == "misplaced_heuristic")
+		std::cout << "Misplaced Heursitic" << std::endl;
+	else
+		std::cout << func << std::endl;
+}
+
+
 void Interface::print_stats(int depth, int explored, int frontier) {
 	std::cout << 
 		"The total depth is " << depth << "." << "\n" <<

@@ -25,23 +25,15 @@ Game::~Game() {
 
 
 void Game::solve(int* config, Interface& interface) {
-
-	// solve_heuristic(manhattan);
-	// solve_heuristic(misplaced);
-
-	int* configuration = UTIL::copy_ptr(config,ELEMENTS);
-	this->add_node(configuration, 0,
-		this->manhattan_heuristic(configuration),
-		nullptr, this->open_slot(configuration));
-	while (!this->is_complete())
-		this->select_move();
-	int depth = this->path(frontier_.top(),interface);
-	interface.print_stats(depth-1,explored_.size(),frontier_.size());
+	interface.print_heuristic("Manhattan Heuristic");
+	solve_heuristic(config,&Game::manhattan_heuristic,interface);
+	interface.print_heuristic("Misplaced Heuristic");
+	solve_heuristic(config,&Game::misplaced_heuristic,interface);
 }
 
 
 // pass heuristic function in this method?
-void Game::select_move() {
+void Game::select_move(int(Game::*heuristic)(int*)) {
 
 	Node* node = frontier_.top();
 	frontier_.pop();
@@ -49,13 +41,13 @@ void Game::select_move() {
 		col = node->open_%DIMENSION;
 
 	if (this->top_open(row))
-		this->move(node, DOWN);
+		this->move(node, heuristic, DOWN);
 	if (this->bottom_open(row))
-		this->move(node, UP);
+		this->move(node, heuristic, UP);
 	if (this->right_open(col))
-		this->move(node, LEFT);
+		this->move(node, heuristic, LEFT);
 	if (this->left_open(col))
-		this->move(node, RIGHT);
+		this->move(node, heuristic, RIGHT);
 	
 	int key = this->hash_key(node->configuration_);
 	this->explored_[key] = node;
@@ -63,7 +55,7 @@ void Game::select_move() {
 
 
 // pass calculate heuristic function
-void Game::move(Node* node, int dir) {
+void Game::move(Node* node, int(Game::*heuristic)(int*), int dir) {
 
 	int* config = UTIL::copy_ptr(node->configuration_, ELEMENTS);
 	int open = node->open_;
@@ -74,13 +66,25 @@ void Game::move(Node* node, int dir) {
 		return;
 
 	this->add_node(config, node->g_+1,
-		this->manhattan_heuristic(config),
+		(this->*heuristic)(config),
 		node, open+dir);
 }
 
 
-void Game::solve_heuristic(int* config, int (Game::*heuristic)(int*)) {
-	std::cout << "in the solve heuristic fxn" << std::endl;
+void Game::solve_heuristic(
+	int* config, 
+	int (Game::*heuristic)(int*), 
+	Interface& interface) 
+{
+	int* configuration = UTIL::copy_ptr(config, ELEMENTS);
+	this->add_node(configuration, 0,
+		(this->*heuristic)(configuration),
+		nullptr, this->open_slot(configuration));
+	while (!this->is_complete())
+		this->select_move(heuristic);
+	int depth = this->path(frontier_.top(), interface);
+	//std::cout << "Using heuristic " << heuristic << std::endl;
+	interface.print_stats(depth - 1, explored_.size(), frontier_.size());
 }
 
 

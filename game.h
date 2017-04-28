@@ -39,10 +39,13 @@ public:
 
 private:
 	void solve(int* config, Interface& interface);
-	void select_move();
-	void move(Node* node, int dir);
-	
-	void solve_heuristic(int* config, int (Game::*heuristic)(int*));
+	void solve_heuristic(
+		int* config, 
+		int (Game::*heuristic)(int*), 
+		Interface& interface);
+
+	void select_move(int(Game::*heuristic)(int*));
+	void move(Node* node, int(Game::*heuristic)(int*), int dir);
 
 	int manhattan_heuristic(int* config);
 	int misplaced_heuristic(int* config);
@@ -67,6 +70,7 @@ private:
 
 	int path(Node* node, Interface& interface);
 	std::vector<Node*> create_path(Node* node);
+
 	void reset(int* config);
 	void clear_frontier();
 	void clear_explored();
