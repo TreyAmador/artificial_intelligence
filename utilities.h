@@ -28,6 +28,14 @@ namespace UTIL {
 	}
 
 
+	void clear_ptr(int*& ptr) {
+		if (ptr != nullptr) {
+			delete[] ptr;
+			ptr = nullptr;
+		}
+	}
+
+
 }
 
 

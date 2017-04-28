@@ -24,10 +24,8 @@ public:
 	void print_node(Node* node);
 
 
-
 private:
 	const int ELEMENTS;
-
 
 };
 

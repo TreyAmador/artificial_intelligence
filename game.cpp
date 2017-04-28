@@ -1,9 +1,7 @@
 /*
 	main game
 */
-
 #include <time.h>
-
 #include "utilities.h"
 #include "interface.h"
 #include "game.h"
@@ -23,6 +21,23 @@ Game::Game() {
 
 Game::~Game() {
 
+}
+
+
+void Game::solve(int* config, Interface& interface) {
+	int* configuration = UTIL::copy_ptr(config,ELEMENTS);
+	this->add_node(configuration, 0,
+		this->manhattan_heuristic(configuration),
+		nullptr, this->open_slot(configuration));
+	while (!this->is_complete())
+		this->select_move();
+	std::vector<Node*> path = this->path(frontier_.top());
+	interface.print_path(path);
+
+	//path.clear();
+	//path.shrink_to_fit();
+
+	
 }
 
 
@@ -54,11 +69,11 @@ void Game::move(Node* node, int dir) {
 	int* config = UTIL::copy_ptr(node->configuration_, ELEMENTS);
 	int open = node->open_;
 	UTIL::swap_indeces(config, open, open + dir);
-	
+
 	int key = this->hash_key(config);
 	if (explored_.count(key))
 		return;
-	
+
 	this->add_node(config, node->g_+1,
 		this->manhattan_heuristic(config),
 		node, open+dir);
@@ -155,7 +170,6 @@ bool Game::is_solvable(int* config) {
 			for (int j = i + 1; j < ELEMENTS; ++j)
 				if (config[i] > config[j] && config[j] != 0)
 					++inversions;
-	std::cout << "The number of inversions is " << inversions << std::endl;
 	return inversions % 2 == 0;
 }
 
@@ -181,9 +195,10 @@ std::vector<Node*> Game::path(Node* init) {
 }
 
 
-void Game::reset() {
+void Game::reset(int* config) {
 	this->clear_frontier();
 	this->clear_explored();
+	UTIL::clear_ptr(config);
 }
 
 
@@ -201,57 +216,13 @@ void Game::clear_frontier() {
 
 void Game::clear_explored() {
 	for (auto iter = explored_.begin(); iter != explored_.end(); ++iter) {
-		auto value = iter->second;
-		if (value != nullptr) {
-			delete value;
-			value = nullptr;
+		if (iter->second != nullptr) {
+			delete iter->second;
+			iter->second = nullptr;
 		}
 	}
+	explored_.clear();
 }
-
-
-/*
-
-// init game board here
-int Game::run() {
-
-	Interface interface(ELEMENTS);
-	std::vector<int*> configs = interface.get_configs("tests/configs.txt");
-	std::vector<int*>::iterator iter = configs.begin();
-
-	//int* config = *iter;
-
-	//this->solve_heuristic(
-	//	UTIL::copy_ptr(config,ELEMENTS),
-	//	&Game::manhattan_heuristic);
-
-	while (iter != configs.end()) {
-		int* config = *iter;
-
-		// manhattan_solve(config, function)
-		// misplaced_solve(config, function)
-
-		if (this->is_solvable(config)) {
-			this->add_node(config, 0,
-				this->manhattan_heuristic(config),
-				nullptr, this->open_slot(config));
-			while (!this->is_complete())
-				this->select_move();
-			interface.print_path(this->path(frontier_.top()));
-			this->reset();
-		} else {
-			interface.not_solvable();
-		}
-
-		++iter;
-
-	}
-
-	return 0;
-}
-
-*/
-
 
 
 // init game board here
@@ -261,17 +232,11 @@ int Game::run() {
 		int* config = interface.prompt();
 		if (this->exit_requested(config))
 			return interface.completed();
-		if (this->is_solvable(config)) {
-			this->add_node(config, 0, 
-				this->manhattan_heuristic(config), 
-				nullptr, this->open_slot(config));
-			while (!this->is_complete())
-				this->select_move();
-			interface.print_path(this->path(frontier_.top()));
-			this->reset();
-		} else {
+		else if (this->is_solvable(config))
+			this->solve(config,interface);
+		else
 			interface.not_solvable();
-		}
+		this->reset(config);
 	}
 	return 0;
 }

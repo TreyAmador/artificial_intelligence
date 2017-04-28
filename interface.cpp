@@ -46,9 +46,8 @@ bool Interface::input_valid(const std::string& input) {
 	std::vector<int> digits(ELEMENTS, 0);
 	for (size_t i = 0; i < input.size(); ++i) {
 		int d = static_cast<int>(input[i]-'0');
-		if (d >= 0 && d <= 8) {
+		if (d >= 0 && d <= 8)
 			++digits[d];
-		}
 	}
 	for (size_t i = 0; i < digits.size(); ++i)
 		if (digits[i] != 1)
@@ -59,7 +58,7 @@ bool Interface::input_valid(const std::string& input) {
 
 int* Interface::prompt() {
 	std::string input("");
-	do {
+	while (true) {
 		std::cout << PROMPT;
 		std::getline(std::cin, input);
 		if (this->input_valid(input))
@@ -68,8 +67,7 @@ int* Interface::prompt() {
 			return nullptr;
 		else
 			std::cout << INVALID_INPUT << std::endl;
-	} while (true);
-	return nullptr;
+	}
 }
 
 
@@ -79,7 +77,7 @@ bool Interface::exit_request(const std::string& input) {
 
 
 int Interface::completed() {
-	std::cout << "Simulation ended." << std::endl;
+	std::cout << "\nSimulation ended.\n" << std::endl;
 	return 0;
 }
 
@@ -87,7 +85,7 @@ int Interface::completed() {
 void Interface::not_solvable() {
 	std::cout <<
 		"This configuration is not solvable.\n" <<
-		"Please try again:\n";
+		"Please try again.\n";
 }
 
 
@@ -109,5 +107,6 @@ void Interface::print_path(std::vector<Node*>& path) {
 	std::cout << "State path\n" << std::endl;
 	for (nIter iter = path.begin(); iter != path.end(); ++iter)
 		this->print_node(*iter);
+	std::cout << "Depth: " << path.size()-1 << std::endl;
 }
 

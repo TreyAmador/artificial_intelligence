@@ -5,6 +5,7 @@
 #include <queue>
 #include <map>
 #include "node.h"
+class Interface;
 
 
 class Comparator {
@@ -37,6 +38,7 @@ public:
 
 
 private:
+	void solve(int* config, Interface& interface);
 	void select_move();
 	void move(Node* node, int dir);
 	
@@ -64,7 +66,7 @@ private:
 	inline bool exit_requested(int* config);
 
 	std::vector<Node*> path(Node* node);
-	void reset();
+	void reset(int* config);
 	void clear_frontier();
 	void clear_explored();
 
