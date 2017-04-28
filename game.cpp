@@ -25,19 +25,18 @@ Game::~Game() {
 
 
 void Game::solve(int* config, Interface& interface) {
+
+	// solve_heuristic(manhattan);
+	// solve_heuristic(misplaced);
+
 	int* configuration = UTIL::copy_ptr(config,ELEMENTS);
 	this->add_node(configuration, 0,
 		this->manhattan_heuristic(configuration),
 		nullptr, this->open_slot(configuration));
 	while (!this->is_complete())
 		this->select_move();
-	std::vector<Node*> path = this->path(frontier_.top());
-	interface.print_path(path);
-
-	//path.clear();
-	//path.shrink_to_fit();
-
-	
+	int depth = this->path(frontier_.top(),interface);
+	interface.print_stats(depth-1,explored_.size(),frontier_.size());
 }
 
 
@@ -184,7 +183,16 @@ inline bool Game::exit_requested(int* config) {
 }
 
 
-std::vector<Node*> Game::path(Node* init) {
+int Game::path(Node* init, Interface& interface) {
+	std::vector<Node*> path = this->create_path(init);
+	int size = static_cast<int>(path.size());
+	interface.print_path(path);
+	UTIL::clear_vec(path);
+	return size;
+}
+
+
+std::vector<Node*> Game::create_path(Node* init) {
 	Node* node = init;
 	std::vector<Node*> path;
 	while (node != nullptr) {

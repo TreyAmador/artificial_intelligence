@@ -65,7 +65,8 @@ private:
 	inline bool is_complete();
 	inline bool exit_requested(int* config);
 
-	std::vector<Node*> path(Node* node);
+	int path(Node* node, Interface& interface);
+	std::vector<Node*> create_path(Node* node);
 	void reset(int* config);
 	void clear_frontier();
 	void clear_explored();

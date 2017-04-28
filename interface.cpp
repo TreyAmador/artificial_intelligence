@@ -3,7 +3,6 @@
 #include <sstream>
 #include "interface.h"
 #include "node.h"
-typedef std::vector<Node*>::iterator nIter;
 
 
 namespace {
@@ -11,6 +10,8 @@ namespace {
 	const std::string INVALID_INPUT = "Input not valid.";
 	const std::string EXIT_COMMAND = "exit";
 }
+
+typedef std::vector<Node*>::iterator nIter;
 
 
 Interface::Interface(int elems) :
@@ -89,17 +90,11 @@ void Interface::not_solvable() {
 }
 
 
-void Interface::print_node(Node* node) {
-	int dim = static_cast<int>(std::sqrt(ELEMENTS));
-	int* config = node->configuration_;
-	for (int r = 0; r < dim; ++r) {
-		for (int c = 0; c < dim; ++c) {
-			std::cout << config[r*dim+c] << " ";
-		}
-		std::cout << "\n";
-	}
-	std::cout << "g(n) = " << node->g_ << ", "
-		<< "h(n) = " << node->h_ << "\n\n";
+void Interface::print_stats(int depth, int explored, int frontier) {
+	std::cout << 
+		"The total depth is " << depth << "." << "\n" <<
+		"A total of " << explored+frontier << 
+		" nodes were visited." << "\n" << std::endl;
 }
 
 
@@ -107,6 +102,18 @@ void Interface::print_path(std::vector<Node*>& path) {
 	std::cout << "State path\n" << std::endl;
 	for (nIter iter = path.begin(); iter != path.end(); ++iter)
 		this->print_node(*iter);
-	std::cout << "Depth: " << path.size()-1 << std::endl;
 }
 
+
+void Interface::print_node(Node* node) {
+	int dim = static_cast<int>(std::sqrt(ELEMENTS));
+	int* config = node->configuration_;
+	for (int r = 0; r < dim; ++r) {
+		for (int c = 0; c < dim; ++c) {
+			std::cout << config[r*dim + c] << " ";
+		}
+		std::cout << "\n";
+	}
+	std::cout << "g(n) = " << node->g_ << ", "
+		<< "h(n) = " << node->h_ << "\n\n";
+}

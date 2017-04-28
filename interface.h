@@ -20,6 +20,7 @@ public:
 	bool exit_request(const std::string& input);
 	int completed();
 	
+	void print_stats(int depth, int explored, int frontier);
 	void print_path(std::vector<Node*>& path);
 	void print_node(Node* node);
 

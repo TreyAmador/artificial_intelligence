@@ -1,11 +1,14 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
+#include <iostream>
+#include <vector>
+struct Node;
 
 
 namespace UTIL {
 
 
-	void swap_indeces(int* config, int a, int b) {
+	 void swap_indeces(int* config, int a, int b) {
 		int temp = config[a];
 		config[a] = config[b];
 		config[b] = temp;
@@ -35,6 +38,12 @@ namespace UTIL {
 		}
 	}
 
+
+	template<class T>
+	void clear_vec(std::vector<T>& elements) {
+		elements.clear();
+		elements.shrink_to_fit();
+	}
 
 }
 
