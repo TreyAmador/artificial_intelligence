@@ -39,10 +39,8 @@ public:
 
 private:
 	void solve(int* config, Interface& interface);
-	void solve_heuristic(
-		int* config, 
-		int (Game::*heuristic)(int*), 
-		Interface& interface);
+	std::vector<Node*> solve_heuristic(
+		int* config, int (Game::*heuristic)(int*));
 
 	void select_move(int(Game::*heuristic)(int*));
 	void move(Node* node, int(Game::*heuristic)(int*), int dir);

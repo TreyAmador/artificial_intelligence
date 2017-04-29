@@ -25,10 +25,24 @@ Game::~Game() {
 
 
 void Game::solve(int* config, Interface& interface) {
-	interface.print_heuristic("Manhattan Heuristic");
-	solve_heuristic(config,&Game::manhattan_heuristic,interface);
-	interface.print_heuristic("Misplaced Heuristic");
-	solve_heuristic(config,&Game::misplaced_heuristic,interface);
+	
+	// timing information
+	std::vector<Node*> manhattan_path = solve_heuristic(config,&Game::manhattan_heuristic);
+	interface.print_heuristic(
+		"Manhattan Heuristic", manhattan_path,
+		frontier_.size(), explored_.size());
+	this->reset(nullptr);
+	UTIL::clear_vec(manhattan_path);
+	// timing information
+
+	// timing information
+	std::vector<Node*> misplaced_path = solve_heuristic(config,&Game::misplaced_heuristic);
+	interface.print_heuristic(
+		"Misplaced Heuristic", misplaced_path,
+		frontier_.size(), explored_.size());
+	this->reset(config);
+	UTIL::clear_vec(misplaced_path);
+	// timing information
 }
 
 
@@ -71,10 +85,8 @@ void Game::move(Node* node, int(Game::*heuristic)(int*), int dir) {
 }
 
 
-void Game::solve_heuristic(
-	int* config, 
-	int (Game::*heuristic)(int*), 
-	Interface& interface) 
+std::vector<Node*> Game::solve_heuristic(
+	int* config, int (Game::*heuristic)(int*)) 
 {
 	int* configuration = UTIL::copy_ptr(config, ELEMENTS);
 	this->add_node(configuration, 0,
@@ -82,9 +94,7 @@ void Game::solve_heuristic(
 		nullptr, this->open_slot(configuration));
 	while (!this->is_complete())
 		this->select_move(heuristic);
-	int depth = this->path(frontier_.top(), interface);
-	//std::cout << "Using heuristic " << heuristic << std::endl;
-	interface.print_stats(depth - 1, explored_.size(), frontier_.size());
+	return this->create_path(frontier_.top());
 }
 
 

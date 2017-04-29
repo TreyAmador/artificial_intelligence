@@ -90,6 +90,17 @@ void Interface::not_solvable() {
 }
 
 
+void Interface::print_heuristic(
+	const std::string& heuristic,
+	std::vector<Node*>& path,
+	int explored, int frontier)
+{
+	std::cout << "\n" << heuristic << "\n\n";
+	this->print_path(path);
+	this->print_stats(path.size(), explored, frontier);
+}
+
+
 void Interface::print_heuristic(const std::string& func) {
 	if (func == "manhattan_heuristic")
 		std::cout << "Manhattan Heuristic" << std::endl;
@@ -109,7 +120,7 @@ void Interface::print_stats(int depth, int explored, int frontier) {
 
 
 void Interface::print_path(std::vector<Node*>& path) {
-	std::cout << "State path\n" << std::endl;
+	std::cout << "\nState path\n" << std::endl;
 	for (nIter iter = path.begin(); iter != path.end(); ++iter)
 		this->print_node(*iter);
 }
