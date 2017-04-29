@@ -247,7 +247,6 @@ void Game::clear_explored() {
 }
 
 
-// init game board here
 int Game::run() {
 	Interface interface(ELEMENTS);
 	while (true) {
@@ -258,7 +257,6 @@ int Game::run() {
 			this->solve(config,interface);
 		else
 			interface.not_solvable();
-		this->reset(config);
 	}
 	return 0;
 }

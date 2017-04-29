@@ -97,7 +97,7 @@ void Interface::print_heuristic(
 {
 	std::cout << "\n" << heuristic << "\n\n";
 	this->print_path(path);
-	this->print_stats(path.size(), explored, frontier);
+	this->print_stats(path.size()-1, explored, frontier);
 }
 
 
