@@ -111,8 +111,8 @@ void Interface::write_stats(
 	int explored, double elapsed) 
 {
 	file_writer_ << 
-		heuristic << "," << 
 		path.size()-1 << "," << 
+		heuristic << "," <<
 		explored << "," << 
 		elapsed << std::endl;
 	std::cout << path.size()-1 << " ";
