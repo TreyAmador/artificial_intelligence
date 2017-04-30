@@ -1,8 +1,6 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
-#include <iostream>
 #include <vector>
-struct Node;
 
 
 namespace UTIL {

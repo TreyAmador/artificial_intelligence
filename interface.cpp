@@ -36,9 +36,8 @@ std::vector<int*> Interface::get_configs(const std::string& filepath) {
 
 int* Interface::convert(const std::string& config) {
 	int* configint = new int[config.size()];
-	for (size_t i = 0; i < config.size(); ++i) {
+	for (size_t i = 0; i < config.size(); ++i)
 		configint[i] = config[i] - '0';
-	}
 	return configint;
 }
 

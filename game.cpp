@@ -11,6 +11,7 @@
 namespace {
 	const int ELEMENTS = 9;
 	const int DIMENSION = static_cast<int>(std::sqrt(ELEMENTS));
+	const std::string SAMPLES = "tests/200 Scrambled Puzzles.txt";
 }
 
 
@@ -24,25 +25,82 @@ Game::~Game() {
 }
 
 
-void Game::solve(int* config, Interface& interface) {
-	
-	// timing information
-	std::vector<Node*> manhattan_path = solve_heuristic(config,&Game::manhattan_heuristic);
-	interface.print_heuristic(
-		"Manhattan Heuristic", manhattan_path,
-		frontier_.size(), explored_.size());
-	this->reset(nullptr);
-	UTIL::clear_vec(manhattan_path);
-	// timing information
+int Game::run() {
+	Interface interface(ELEMENTS);
+	//this->samples(SAMPLES, interface);
+	return this->input(interface);
+}
 
-	// timing information
-	std::vector<Node*> misplaced_path = solve_heuristic(config,&Game::misplaced_heuristic);
-	interface.print_heuristic(
-		"Misplaced Heuristic", misplaced_path,
-		frontier_.size(), explored_.size());
-	this->reset(config);
-	UTIL::clear_vec(misplaced_path);
-	// timing information
+
+void Game::samples(const std::string& filepath, Interface& interface) {
+	std::vector<int*> configs = interface.get_configs(filepath);
+	for (size_t i = 0; i < configs.size(); ++i) {
+		if (this->is_solvable(configs[i])) {
+			this->solve(configs[i], interface);
+		}
+		else {
+			interface.not_solvable();
+		}
+	}
+}
+
+
+int Game::input(Interface& interface) {
+	while (true) {
+		int* config = interface.prompt();
+		if (this->exit_requested(config))
+			return interface.completed();
+		else if (this->is_solvable(config))
+			this->solve(config, interface);
+		else
+			interface.not_solvable();
+		UTIL::clear_ptr(config);
+	}
+	return 0;
+}
+
+
+void Game::solve(int* config, Interface& interface) {
+	this->solve_heuristic(
+		config,&Game::manhattan_heuristic,
+		"Manhattan Heuristic",interface);
+	this->solve_heuristic(
+		config,&Game::misplaced_heuristic,
+		"Misplaced Heuristic",interface);
+}
+
+
+void Game::solve_heuristic(
+	int* config, int(Game::*heuristic)(int*), 
+	const std::string& type, Interface& interface)
+{
+	int* configuration = UTIL::copy_ptr(config, ELEMENTS);
+	this->add_node(configuration, 0,
+		(this->*heuristic)(configuration),
+		nullptr, this->open_slot(configuration));
+	while (!this->is_complete())
+		this->select_move(heuristic);
+	std::vector<Node*> path = this->create_path(frontier_.top());
+	interface.print_heuristic(type,path, frontier_.size(), explored_.size());
+	this->reset(nullptr);
+	UTIL::clear_vec(path);
+}
+
+
+// pass calculate heuristic function
+void Game::move(Node* node, int(Game::*heuristic)(int*), int dir) {
+
+	int* config = UTIL::copy_ptr(node->configuration_, ELEMENTS);
+	int open = node->open_;
+	UTIL::swap_indeces(config, open, open + dir);
+
+	int key = this->hash_key(config);
+	if (explored_.count(key))
+		return;
+
+	this->add_node(config, node->g_ + 1,
+		(this->*heuristic)(config),
+		node, open + dir);
 }
 
 
@@ -65,36 +123,6 @@ void Game::select_move(int(Game::*heuristic)(int*)) {
 	
 	int key = this->hash_key(node->configuration_);
 	this->explored_[key] = node;
-}
-
-
-// pass calculate heuristic function
-void Game::move(Node* node, int(Game::*heuristic)(int*), int dir) {
-
-	int* config = UTIL::copy_ptr(node->configuration_, ELEMENTS);
-	int open = node->open_;
-	UTIL::swap_indeces(config, open, open + dir);
-
-	int key = this->hash_key(config);
-	if (explored_.count(key))
-		return;
-
-	this->add_node(config, node->g_+1,
-		(this->*heuristic)(config),
-		node, open+dir);
-}
-
-
-std::vector<Node*> Game::solve_heuristic(
-	int* config, int (Game::*heuristic)(int*)) 
-{
-	int* configuration = UTIL::copy_ptr(config, ELEMENTS);
-	this->add_node(configuration, 0,
-		(this->*heuristic)(configuration),
-		nullptr, this->open_slot(configuration));
-	while (!this->is_complete())
-		this->select_move(heuristic);
-	return this->create_path(frontier_.top());
 }
 
 
@@ -197,15 +225,6 @@ inline bool Game::exit_requested(int* config) {
 }
 
 
-int Game::path(Node* init, Interface& interface) {
-	std::vector<Node*> path = this->create_path(init);
-	int size = static_cast<int>(path.size());
-	interface.print_path(path);
-	UTIL::clear_vec(path);
-	return size;
-}
-
-
 std::vector<Node*> Game::create_path(Node* init) {
 	Node* node = init;
 	std::vector<Node*> path;
@@ -244,20 +263,5 @@ void Game::clear_explored() {
 		}
 	}
 	explored_.clear();
-}
-
-
-int Game::run() {
-	Interface interface(ELEMENTS);
-	while (true) {
-		int* config = interface.prompt();
-		if (this->exit_requested(config))
-			return interface.completed();
-		else if (this->is_solvable(config))
-			this->solve(config,interface);
-		else
-			interface.not_solvable();
-	}
-	return 0;
 }
 

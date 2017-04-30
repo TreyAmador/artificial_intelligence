@@ -38,13 +38,21 @@ public:
 
 
 private:
+	void samples(const std::string& filepath, Interface& interface);
+	int input(Interface& interface);
+
 	void solve(int* config, Interface& interface);
-	std::vector<Node*> solve_heuristic(
-		int* config, int (Game::*heuristic)(int*));
+	
+	// std::vector<Node*> solve_heuristic(
+	// int* config, int (Game::*heuristic)(int*));
+	
+	void solve_heuristic(
+		int* config, int(Game::*heuristic)(int*),
+		const std::string& type, Interface& interface);
 
-	void select_move(int(Game::*heuristic)(int*));
 	void move(Node* node, int(Game::*heuristic)(int*), int dir);
-
+	void select_move(int(Game::*heuristic)(int*));
+	
 	int manhattan_heuristic(int* config);
 	int misplaced_heuristic(int* config);
 
@@ -66,7 +74,6 @@ private:
 	inline bool is_complete();
 	inline bool exit_requested(int* config);
 
-	int path(Node* node, Interface& interface);
 	std::vector<Node*> create_path(Node* node);
 
 	void reset(int* config);
