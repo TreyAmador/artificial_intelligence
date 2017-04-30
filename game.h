@@ -42,10 +42,6 @@ private:
 	int input(Interface& interface);
 
 	void solve(int* config, Interface& interface);
-	
-	// std::vector<Node*> solve_heuristic(
-	// int* config, int (Game::*heuristic)(int*));
-	
 	void solve_heuristic(
 		int* config, int(Game::*heuristic)(int*),
 		const std::string& type, Interface& interface);
@@ -77,6 +73,7 @@ private:
 	std::vector<Node*> create_path(Node* node);
 
 	void reset(int* config);
+	void reset_edge();
 	void clear_frontier();
 	void clear_explored();
 
@@ -84,7 +81,7 @@ private:
 private:
 	Explored explored_;
 	Frontier frontier_;
-	
+	int edge_;
 
 };
 

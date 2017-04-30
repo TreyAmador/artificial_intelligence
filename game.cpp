@@ -1,6 +1,7 @@
 /*
 	main game
 */
+#include <iostream>
 #include <time.h>
 #include "utilities.h"
 #include "interface.h"
@@ -11,35 +12,39 @@
 namespace {
 	const int ELEMENTS = 9;
 	const int DIMENSION = static_cast<int>(std::sqrt(ELEMENTS));
-	const std::string SAMPLES = "tests/200 Scrambled Puzzles.txt";
+	//const std::string SAMPLES = "tests/200 Scrambled Puzzles.txt";
+	const std::string SAMPLES = "tests/depth20.txt";
+
 }
 
 
 Game::Game() {
-
+	this->reset_edge();
 }
 
 
 Game::~Game() {
-
+	this->reset(nullptr);
 }
 
 
 int Game::run() {
 	Interface interface(ELEMENTS);
-	//this->samples(SAMPLES, interface);
-	return this->input(interface);
+	this->samples(SAMPLES, interface);
+	//return this->input(interface);
+	return 0;
 }
 
 
 void Game::samples(const std::string& filepath, Interface& interface) {
-	std::vector<int*> configs = interface.get_configs(filepath);
-	for (size_t i = 0; i < configs.size(); ++i) {
-		if (this->is_solvable(configs[i])) {
-			this->solve(configs[i], interface);
-		}
-		else {
-			interface.not_solvable();
+	if (!interface.bypass_file()) {
+		std::vector<int*> configs = interface.get_configs(filepath);
+		for (size_t i = 0; i < configs.size(); ++i) {
+			if (this->is_solvable(configs[i])) {
+				this->solve(configs[i], interface);
+			} else {
+				interface.not_solvable();
+			}
 		}
 	}
 }
@@ -54,7 +59,7 @@ int Game::input(Interface& interface) {
 			this->solve(config, interface);
 		else
 			interface.not_solvable();
-		UTIL::clear_ptr(config);
+		this->reset(config);
 	}
 	return 0;
 }
@@ -75,6 +80,7 @@ void Game::solve_heuristic(
 	const std::string& type, Interface& interface)
 {
 	int* configuration = UTIL::copy_ptr(config, ELEMENTS);
+	this->reset_edge();
 	this->add_node(configuration, 0,
 		(this->*heuristic)(configuration),
 		nullptr, this->open_slot(configuration));
@@ -82,6 +88,7 @@ void Game::solve_heuristic(
 		this->select_move(heuristic);
 	std::vector<Node*> path = this->create_path(frontier_.top());
 	interface.print_heuristic(type,path, frontier_.size(), explored_.size());
+	interface.print_heuristic(type, path, edge_, 0);
 	this->reset(nullptr);
 	UTIL::clear_vec(path);
 }
@@ -181,6 +188,7 @@ void Game::add_node(
 		parent,
 		open
 	));
+	++edge_;
 }
 
 
@@ -240,6 +248,12 @@ void Game::reset(int* config) {
 	this->clear_frontier();
 	this->clear_explored();
 	UTIL::clear_ptr(config);
+	this->reset_edge();
+}
+
+
+void Game::reset_edge() {
+	edge_ = 0;
 }
 
 

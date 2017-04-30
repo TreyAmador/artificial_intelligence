@@ -15,10 +15,12 @@ public:
 	int* convert(const std::string& filepath);
 
 	int* prompt();
-	void not_solvable();
-	bool input_valid(const std::string& input);
 	bool exit_request(const std::string& input);
 	int completed();
+
+	void not_solvable();
+	bool input_valid(const std::string& input);
+	bool bypass_file();
 	
 	void print_heuristic(
 		const std::string& heuristic,

@@ -89,6 +89,20 @@ void Interface::not_solvable() {
 }
 
 
+bool Interface::bypass_file() {
+	std::cout <<
+		"Enter 'y' to run statistical analysis.\n" <<
+		"Otherwise, press any key to run manual input.\n";
+	std::string input;
+	std::cin >> input;
+	if (input != "y") {
+		std::cout << "\nStatistical analyses bypassed\n\n" << std::endl;
+		return true;
+	}
+	return false;
+}
+
+
 void Interface::print_heuristic(
 	const std::string& heuristic,
 	std::vector<Node*>& path,
