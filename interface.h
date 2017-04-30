@@ -1,5 +1,7 @@
 #ifndef INTERFACE_H_
 #define INTERFACE_H_
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 struct Node;
@@ -22,17 +24,21 @@ public:
 	bool input_valid(const std::string& input);
 	bool bypass_file();
 	
+	void write_stats(
+		const std::string& heuristic,
+		std::vector<Node*>& path,
+		int explored, double elapsed);
 	void print_heuristic(
 		const std::string& heuristic,
 		std::vector<Node*>& path,
-		int frontier, int explored);
-	void print_heuristic(const std::string& func);
-	void print_stats(int depth, int explored, int frontier);
+		int explored);
+	void print_stats(int depth, int explored);
 	void print_path(std::vector<Node*>& path);
 	void print_node(Node* node);
 
 
 private:
+	std::ofstream file_writer_;
 	const int ELEMENTS;
 
 };

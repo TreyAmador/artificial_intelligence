@@ -1,13 +1,14 @@
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include "interface.h"
 #include "node.h"
 
 
 namespace {
-	const std::string PROMPT = "Enter a string of non-repeating digits, 0 through 8: ";
+	const std::string PROMPT = 
+		"Enter a string of non-repeating digits, 0 through 8, or type 'exit' to quit:\n";
 	const std::string INVALID_INPUT = "Input not valid.";
+	const std::string WRITE_PATH = "tests/output.txt";
 	const std::string EXIT_COMMAND = "exit";
 }
 
@@ -15,12 +16,13 @@ typedef std::vector<Node*>::iterator nIter;
 
 
 Interface::Interface(int elems) :
-	ELEMENTS(elems) 
+	ELEMENTS(elems),
+	file_writer_(WRITE_PATH)
 {}
 
 
 Interface::~Interface() {
-
+	file_writer_.close();
 }
 
 
@@ -103,31 +105,35 @@ bool Interface::bypass_file() {
 }
 
 
+void Interface::write_stats(
+	const std::string& heuristic,
+	std::vector<Node*>& path,
+	int explored, double elapsed) 
+{
+	file_writer_ << 
+		heuristic << "," << 
+		path.size()-1 << "," << 
+		explored << "," << 
+		elapsed << std::endl;
+	std::cout << path.size()-1 << " ";
+}
+
+
 void Interface::print_heuristic(
 	const std::string& heuristic,
 	std::vector<Node*>& path,
-	int explored, int frontier)
+	int explored)
 {
 	std::cout << "\n" << heuristic << "\n\n";
 	this->print_path(path);
-	this->print_stats(path.size()-1, explored, frontier);
+	this->print_stats(path.size()-1, explored);
 }
 
 
-void Interface::print_heuristic(const std::string& func) {
-	if (func == "manhattan_heuristic")
-		std::cout << "Manhattan Heuristic" << std::endl;
-	else if (func == "misplaced_heuristic")
-		std::cout << "Misplaced Heursitic" << std::endl;
-	else
-		std::cout << func << std::endl;
-}
-
-
-void Interface::print_stats(int depth, int explored, int frontier) {
+void Interface::print_stats(int depth, int explored) {
 	std::cout << 
 		"The total depth is " << depth << "." << "\n" <<
-		"A total of " << explored+frontier << 
+		"A total of " << explored << 
 		" nodes were visited." << "\n" << std::endl;
 }
 

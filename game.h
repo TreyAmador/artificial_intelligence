@@ -5,6 +5,7 @@
 #include <queue>
 #include <map>
 #include "node.h"
+#include "data.h"
 class Interface;
 
 
@@ -38,7 +39,7 @@ public:
 
 
 private:
-	void samples(const std::string& filepath, Interface& interface);
+	int samples(const std::string& filepath, Interface& interface);
 	int input(Interface& interface);
 
 	void solve(int* config, Interface& interface);
@@ -82,6 +83,7 @@ private:
 	Explored explored_;
 	Frontier frontier_;
 	int edge_;
+	Data data_;
 
 };
 
