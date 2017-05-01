@@ -1,9 +1,9 @@
 #ifndef GAME_H_
 #define GAME_H_
+#include <unordered_map>
 #include <vector>
 #include <string>
 #include <queue>
-#include <map>
 #include "node.h"
 #include "data.h"
 class Interface;
@@ -18,7 +18,7 @@ public:
 
 
 typedef std::priority_queue<Node*, std::vector<Node*>, Comparator> Frontier;
-typedef std::map<int, Node*> Explored;
+typedef std::unordered_map<int, Node*> Explored;
 typedef Explored::iterator ExIter;
 
 
@@ -72,7 +72,7 @@ private:
 	inline bool exit_requested(int* config);
 
 	std::vector<Node*> create_path(Node* node);
-
+	
 	void reset(int* config);
 	void reset_edge();
 	void clear_frontier();
@@ -84,6 +84,7 @@ private:
 	Frontier frontier_;
 	int edge_;
 	Data data_;
+
 
 };
 

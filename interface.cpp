@@ -5,11 +5,7 @@
 
 
 namespace {
-	const std::string PROMPT = 
-		"Enter a string of non-repeating digits, 0 through 8, or type 'exit' to quit:\n";
-	const std::string INVALID_INPUT = "Input not valid.";
 	const std::string WRITE_PATH = "tests/output.txt";
-	const std::string EXIT_COMMAND = "exit";
 }
 
 typedef std::vector<Node*>::iterator nIter;
@@ -61,33 +57,35 @@ bool Interface::input_valid(const std::string& input) {
 int* Interface::prompt() {
 	std::string input("");
 	while (true) {
-		std::cout << PROMPT;
+		std::cout << 
+			"Enter a string of non-repeating digits, 0 through 8, " << 
+			"or type 'exit' to quit:\n";
 		std::getline(std::cin, input);
 		if (this->input_valid(input))
 			return this->convert(input);
 		else if (this->exit_request(input))
 			return nullptr;
 		else
-			std::cout << INVALID_INPUT << std::endl;
+			std::cout << "\nInput not valid.\n" << std::endl;
 	}
 }
 
 
 bool Interface::exit_request(const std::string& input) {
-	return input == EXIT_COMMAND;
+	return input == "exit";
 }
 
 
 int Interface::completed() {
-	std::cout << "\nSimulation ended.\n" << std::endl;
+	std::cout << "\n\nSimulation ended.\n\n" << std::endl;
 	return 0;
 }
 
 
 void Interface::not_solvable() {
 	std::cout <<
-		"This configuration is not solvable.\n" <<
-		"Please try again.\n";
+		"\nThis configuration is not solvable.\n" <<
+		"Please try again.\n\n";
 }
 
 
@@ -132,9 +130,9 @@ void Interface::print_heuristic(
 
 void Interface::print_stats(int depth, int explored) {
 	std::cout << 
-		"The total depth is " << depth << "." << "\n" <<
+		"\nThe total depth is " << depth << "." << "\n" <<
 		"A total of " << explored << 
-		" nodes were visited." << "\n" << std::endl;
+		" nodes were visited.\n\n" << std::endl;
 }
 
 

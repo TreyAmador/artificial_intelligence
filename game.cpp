@@ -30,8 +30,9 @@ Game::~Game() {
 
 int Game::run() {
 	Interface interface(ELEMENTS);
-	return this->samples(SAMPLES, interface);
-	//return this->input(interface);
+	// this is commented out for convenience
+	//return this->samples(SAMPLES, interface);
+	return this->input(interface);
 }
 
 
@@ -82,8 +83,9 @@ void Game::solve_heuristic(
 	while (!this->is_complete())
 		this->select_move(heuristic);
 	std::vector<Node*> path = this->create_path(frontier_.top());
-	interface.write_stats(type, path, edge_, data_.elapsed_time());
-	//interface.print_heuristic(type, path, edge_);
+	// this is commented out for the purpose of user convenience
+	// interface.write_stats(type, path, edge_, data_.elapsed_time());
+	interface.print_heuristic(type, path, edge_);
 	UTIL::clear_vec(path);
 }
 
@@ -157,8 +159,6 @@ int Game::open_slot(int* config) {
 }
 
 
-// this should be revised...
-// you won't use a map in final version
 int Game::hash_key(int* config) {
 	int key = 0;
 	for (int i = 0; i < ELEMENTS; ++i)
@@ -264,7 +264,7 @@ void Game::clear_frontier() {
 
 
 void Game::clear_explored() {
-	for (auto iter = explored_.begin(); iter != explored_.end(); ++iter) {
+	for (ExIter iter = explored_.begin(); iter != explored_.end(); ++iter) {
 		if (iter->second != nullptr) {
 			delete iter->second;
 			iter->second = nullptr;
